@@ -10,13 +10,16 @@
     "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "@carta/ink": "^34.0.1",
+    "framer-motion": "^6.5.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-use-measure": "^2.1.7",
     "styled-components": "^6.1.19"
   },
   "devDependencies": {
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
     "@types/styled-components": "^5.1.35",
     "@vitejs/plugin-react": "^4.3.0",
     "gh-pages": "^6.3.0",
