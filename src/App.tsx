@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { RollingNumber } from "./components/RollingNumber";
+import { FormattedRollingNumber } from "./components/FormattedRollingNumber";
 
 const AppContainer = styled.div`
   min-height: 100vh;
   background: #f8f9fa;
   padding: 2rem;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 `;
 
 const Container = styled.div`
@@ -107,7 +108,7 @@ const SampleRow = styled.div`
   }
 
   &:hover {
-    border-left-color: #FC6544;
+    border-left-color: #fc6544;
   }
 `;
 
@@ -203,14 +204,15 @@ const SmallButton = styled.button`
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   box-shadow: 0 0 0 0 rgba(252, 101, 68, 0);
 
   &:hover {
     color: #1a1a1a;
     border-color: #e0e0e0;
     background: #f8f9fa;
-    box-shadow: 0 0 12px 3px rgba(252, 101, 68, 0.12), 0 2px 8px 0 rgba(252, 101, 68, 0.2);
+    box-shadow: 0 0 12px 3px rgba(252, 101, 68, 0.12),
+      0 2px 8px 0 rgba(252, 101, 68, 0.2);
   }
 
   &:active {
@@ -233,6 +235,9 @@ export const App = () => {
     medium: 0,
     slow: 0,
     all: 0,
+    formattedCurrencyLarge: 0,
+    formattedCurrencySmall: 0,
+    formattedPercentage: 0,
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -278,12 +283,20 @@ export const App = () => {
             <SampleLabel>
               <SampleTitle>
                 Revenue Counter
-                <SmallButton onClick={() => retriggerAnimation("revenue")}>↻</SmallButton>
+                <SmallButton onClick={() => retriggerAnimation("revenue")}>
+                  ↻
+                </SmallButton>
               </SampleTitle>
               <SampleDescription>Annual recurring revenue</SampleDescription>
             </SampleLabel>
             <SampleValue>
-              $<RollingNumber key={`revenue-${animationKeys.revenue}`} from={0} to={2847392} duration={2000} />
+              $
+              <RollingNumber
+                key={`revenue-${animationKeys.revenue}`}
+                from={0}
+                to={2847392}
+                duration={2000}
+              />
             </SampleValue>
           </SampleRow>
 
@@ -291,12 +304,19 @@ export const App = () => {
             <SampleLabel>
               <SampleTitle>
                 User Count
-                <SmallButton onClick={() => retriggerAnimation("users")}>↻</SmallButton>
+                <SmallButton onClick={() => retriggerAnimation("users")}>
+                  ↻
+                </SmallButton>
               </SampleTitle>
               <SampleDescription>Active users this month</SampleDescription>
             </SampleLabel>
             <SampleValue>
-              <RollingNumber key={`users-${animationKeys.users}`} from={0} to={15847} duration={1500} />
+              <RollingNumber
+                key={`users-${animationKeys.users}`}
+                from={0}
+                to={15847}
+                duration={1500}
+              />
             </SampleValue>
           </SampleRow>
 
@@ -304,12 +324,20 @@ export const App = () => {
             <SampleLabel>
               <SampleTitle>
                 Growth Rate
-                <SmallButton onClick={() => retriggerAnimation("growth")}>↻</SmallButton>
+                <SmallButton onClick={() => retriggerAnimation("growth")}>
+                  ↻
+                </SmallButton>
               </SampleTitle>
               <SampleDescription>Year over year percentage</SampleDescription>
             </SampleLabel>
             <SampleValue>
-              <RollingNumber key={`growth-${animationKeys.growth}`} from={0} to={247} duration={1200} />%
+              <RollingNumber
+                key={`growth-${animationKeys.growth}`}
+                from={0}
+                to={247}
+                duration={1200}
+              />
+              %
             </SampleValue>
           </SampleRow>
 
@@ -317,12 +345,19 @@ export const App = () => {
             <SampleLabel>
               <SampleTitle>
                 Transactions
-                <SmallButton onClick={() => retriggerAnimation("transactions")}>↻</SmallButton>
+                <SmallButton onClick={() => retriggerAnimation("transactions")}>
+                  ↻
+                </SmallButton>
               </SampleTitle>
               <SampleDescription>Processed today</SampleDescription>
             </SampleLabel>
             <SampleValue>
-              <RollingNumber key={`transactions-${animationKeys.transactions}`} from={0} to={8932} duration={1800} />
+              <RollingNumber
+                key={`transactions-${animationKeys.transactions}`}
+                from={0}
+                to={8932}
+                duration={1800}
+              />
             </SampleValue>
           </SampleRow>
         </SampleSection>
@@ -330,33 +365,61 @@ export const App = () => {
         <Grid>
           <GridItem>
             <SampleSection style={{ textAlign: "center" }}>
-              <SectionTitle style={{ textAlign: "center", marginBottom: "0.5rem" }}>Small Numbers</SectionTitle>
-              <SectionText style={{ marginBottom: "1rem" }}>Perfect for counters and metrics</SectionText>
+              <SectionTitle
+                style={{ textAlign: "center", marginBottom: "0.5rem" }}
+              >
+                Small Numbers
+              </SectionTitle>
+              <SectionText style={{ marginBottom: "1rem" }}>
+                Perfect for counters and metrics
+              </SectionText>
               <div style={{ marginBottom: "1.5rem" }}>
-                <SmallButton onClick={() => retriggerAnimation("small")}>↻ Retrigger</SmallButton>
+                <SmallButton onClick={() => retriggerAnimation("small")}>
+                  ↻ Retrigger
+                </SmallButton>
               </div>
               <LargeMetricValue style={{ color: "#1a1a1a" }}>
-                <RollingNumber key={`small-${animationKeys.small}`} from={0} to={42} duration={1000} />
+                <RollingNumber
+                  key={`small-${animationKeys.small}`}
+                  from={0}
+                  to={42}
+                  duration={1000}
+                />
               </LargeMetricValue>
             </SampleSection>
           </GridItem>
 
           <GridItem>
             <SampleSection style={{ textAlign: "center" }}>
-              <SectionTitle style={{ textAlign: "center", marginBottom: "0.5rem" }}>Large Numbers</SectionTitle>
-              <SectionText style={{ marginBottom: "1rem" }}>Great for financial dashboards</SectionText>
+              <SectionTitle
+                style={{ textAlign: "center", marginBottom: "0.5rem" }}
+              >
+                Large Numbers
+              </SectionTitle>
+              <SectionText style={{ marginBottom: "1rem" }}>
+                Great for financial dashboards
+              </SectionText>
               <div style={{ marginBottom: "1.5rem" }}>
-                <SmallButton onClick={() => retriggerAnimation("large")}>↻ Retrigger</SmallButton>
+                <SmallButton onClick={() => retriggerAnimation("large")}>
+                  ↻ Retrigger
+                </SmallButton>
               </div>
               <LargeMetricValue style={{ color: "#1a1a1a" }}>
-                <RollingNumber key={`large-${animationKeys.large}`} from={0} to={9876543} duration={2500} />
+                <RollingNumber
+                  key={`large-${animationKeys.large}`}
+                  from={0}
+                  to={9876543}
+                  duration={2500}
+                />
               </LargeMetricValue>
             </SampleSection>
           </GridItem>
         </Grid>
 
         <CenteredSection>
-          <SectionTitle style={{ marginBottom: "0.5rem" }}>Different Durations</SectionTitle>
+          <SectionTitle style={{ marginBottom: "0.5rem" }}>
+            Different Durations
+          </SectionTitle>
           <SectionText>
             Customize animation speed for different use cases
           </SectionText>
@@ -365,7 +428,9 @@ export const App = () => {
             <MetricBox>
               <MetricLabel>Fast (500ms)</MetricLabel>
               <div style={{ marginBottom: "0.5rem" }}>
-                <SmallButton onClick={() => retriggerAnimation("fast")}>↻ Retrigger</SmallButton>
+                <SmallButton onClick={() => retriggerAnimation("fast")}>
+                  ↻ Retrigger
+                </SmallButton>
               </div>
               <MetricValue>
                 <RollingNumber
@@ -380,7 +445,9 @@ export const App = () => {
             <MetricBox>
               <MetricLabel>Medium (1500ms)</MetricLabel>
               <div style={{ marginBottom: "0.5rem" }}>
-                <SmallButton onClick={() => retriggerAnimation("medium")}>↻ Retrigger</SmallButton>
+                <SmallButton onClick={() => retriggerAnimation("medium")}>
+                  ↻ Retrigger
+                </SmallButton>
               </div>
               <MetricValue>
                 <RollingNumber
@@ -395,7 +462,9 @@ export const App = () => {
             <MetricBox>
               <MetricLabel>Slow (3000ms)</MetricLabel>
               <div style={{ marginBottom: "0.5rem" }}>
-                <SmallButton onClick={() => retriggerAnimation("slow")}>↻ Retrigger</SmallButton>
+                <SmallButton onClick={() => retriggerAnimation("slow")}>
+                  ↻ Retrigger
+                </SmallButton>
               </div>
               <MetricValue>
                 <RollingNumber
@@ -403,6 +472,86 @@ export const App = () => {
                   from={0}
                   to={targetNumber || 1234}
                   duration={3000}
+                />
+              </MetricValue>
+            </MetricBox>
+          </SmallGrid>
+        </CenteredSection>
+
+        <CenteredSection
+          style={{
+            marginTop: "3rem",
+            border: "2px dashed #e0e0e0",
+            paddingTop: "3rem",
+          }}
+        >
+          <SectionTitle style={{ marginBottom: "0.5rem" }}>
+            Experimental: Formatted Numbers
+          </SectionTitle>
+          <SectionText>
+            Testing formatted rolling numbers with commas, decimals, and symbols
+          </SectionText>
+
+          <SmallGrid>
+            <MetricBox>
+              <MetricLabel>Large Currency</MetricLabel>
+              <div style={{ marginBottom: "0.5rem" }}>
+                <SmallButton
+                  onClick={() => retriggerAnimation("formattedCurrencyLarge")}
+                >
+                  ↻ Retrigger
+                </SmallButton>
+              </div>
+              <MetricValue style={{ fontSize: "1.25rem" }}>
+                <FormattedRollingNumber
+                  key={`currency-large-${animationKeys.formattedCurrencyLarge}`}
+                  from={992123.98}
+                  to={107262123.98}
+                  duration={2000}
+                  format="currency"
+                  decimalPlaces={2}
+                />
+              </MetricValue>
+            </MetricBox>
+
+            <MetricBox>
+              <MetricLabel>Precision Percentage</MetricLabel>
+              <div style={{ marginBottom: "0.5rem" }}>
+                <SmallButton
+                  onClick={() => retriggerAnimation("formattedPercentage")}
+                >
+                  ↻ Retrigger
+                </SmallButton>
+              </div>
+              <MetricValue style={{ fontSize: "1.25rem" }}>
+                <FormattedRollingNumber
+                  key={`percentage-${animationKeys.formattedPercentage}`}
+                  from={17.093827}
+                  to={98.765432}
+                  duration={2500}
+                  format="percentage"
+                  decimalPlaces={6}
+                />
+              </MetricValue>
+            </MetricBox>
+
+            <MetricBox>
+              <MetricLabel>Small Currency</MetricLabel>
+              <div style={{ marginBottom: "0.5rem" }}>
+                <SmallButton
+                  onClick={() => retriggerAnimation("formattedCurrencySmall")}
+                >
+                  ↻ Retrigger
+                </SmallButton>
+              </div>
+              <MetricValue style={{ fontSize: "1.25rem" }}>
+                <FormattedRollingNumber
+                  key={`currency-small-${animationKeys.formattedCurrencySmall}`}
+                  from={21.25}
+                  to={42.5}
+                  duration={1500}
+                  format="currency"
+                  decimalPlaces={2}
                 />
               </MetricValue>
             </MetricBox>
