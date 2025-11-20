@@ -10,6 +10,7 @@
     "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
+    "@carta/ink": "^34.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "styled-components": "^6.1.19"
