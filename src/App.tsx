@@ -505,7 +505,7 @@ export const App = () => {
               <MetricValue style={{ fontSize: "1.25rem" }}>
                 <FormattedRollingNumber
                   key={`currency-large-${animationKeys.formattedCurrencyLarge}`}
-                  from={992123.98}
+                  from={992624.31}
                   to={107262123.98}
                   duration={2000}
                   format="currency"

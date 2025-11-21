@@ -2,3 +2,4 @@ docs/plans/
 node_modules/
 dist/
 *.log
+.idea
