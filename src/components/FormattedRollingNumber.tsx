@@ -6,9 +6,39 @@ const FormattedContainer = styled.span`
   font-variant-numeric: tabular-nums;
 `;
 
-const StaticChar = styled.span`
+const StaticChar = styled.span<{ char: string }>`
   display: inline-block;
-  width: 1ch;
+  ${props => {
+    // Commas should be much narrower and closer to digits
+    if (props.char === ',') {
+      return `
+        width: auto;
+        margin: 0 -0.05em;
+      `;
+    }
+    // Dollar sign can be a bit closer to the first digit
+    if (props.char === '$') {
+      return `
+        width: auto;
+        margin-right: 0.05em;
+      `;
+    }
+    // Percentage sign can be closer to the last digit
+    if (props.char === '%') {
+      return `
+        width: auto;
+        margin-left: 0.05em;
+      `;
+    }
+    // Decimal point should be very close to digits
+    if (props.char === '.') {
+      return `
+        width: auto;
+        margin: 0 0.05em;
+      `;
+    }
+    return 'width: 1ch;';
+  }}
 `;
 
 const Digit = styled.span<{ value: string }>`
@@ -31,6 +61,10 @@ const Digit = styled.span<{ value: string }>`
     justify-content: center;
     flex-direction: column;
     transition: transform var(--roll-duration, 1s);
+  }
+
+  .scale span {
+    line-height: 1.4;
   }
 
   .scale span:last-child {
@@ -67,7 +101,7 @@ interface FormattedRollingNumberProps {
   from?: number;
   to: number;
   duration?: number;
-  format: 'currency' | 'percentage';
+  format: 'currency' | 'percentage' | 'numerical';
   decimalPlaces?: number;
   className?: string;
   style?: React.CSSProperties;
@@ -79,7 +113,7 @@ type FormattedPart = {
   digitIndex?: number; // Track which digit this is in the number
 };
 
-function getDigitStructure(targetNum: number, format: 'currency' | 'percentage', decimalPlaces: number): FormattedPart[] {
+function getDigitStructure(targetNum: number, format: 'currency' | 'percentage' | 'numerical', decimalPlaces: number): FormattedPart[] {
   // Create the structure based on target number (determines comma positions)
   const parts: FormattedPart[] = [];
   const absTarget = Math.abs(targetNum);
@@ -176,7 +210,7 @@ export const FormattedRollingNumber: React.FC<FormattedRollingNumberProps> = ({
     >
       {structure.map((part, index) => {
         if (part.type === 'static') {
-          return <StaticChar key={`static-${index}`}>{part.value}</StaticChar>;
+          return <StaticChar key={`static-${index}`} char={part.value}>{part.value}</StaticChar>;
         } else {
           // Get the actual digit value for this position
           const digitValue = currentDigits.get(part.digitIndex!) || '0';

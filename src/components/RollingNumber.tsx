@@ -28,6 +28,10 @@ const Digit = styled.span<{ value: string }>`
     transition: transform var(--roll-duration, 1s);
   }
 
+  .scale span {
+    line-height: 1.4;
+  }
+
   .scale span:last-child {
     /* the minus (-) */
     position: absolute;

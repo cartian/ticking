@@ -221,34 +221,232 @@ const SmallButton = styled.button`
   }
 `;
 
+const ControlsSection = styled.div`
+  display: flex;
+  gap: 3rem;
+  margin: 2rem 0;
+  padding: 0 2rem;
+  justify-content: center;
+  align-items: flex-start;
+`;
+
+const ControlGroup = styled.div`
+  flex: 1;
+  max-width: 350px;
+`;
+
+const ControlLabel = styled.label`
+  display: block;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+`;
+
+const Slider = styled.input`
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e0e0e0;
+  outline: none;
+  -webkit-appearance: none;
+  margin-bottom: 0.5rem;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fc6544;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 12px 3px rgba(252, 101, 68, 0.3);
+    }
+  }
+
+  &::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fc6544;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+
+    &:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 12px 3px rgba(252, 101, 68, 0.3);
+    }
+  }
+`;
+
+const SliderValue = styled.div`
+  text-align: center;
+  font-size: 0.875rem;
+  color: #1a1a1a;
+  font-weight: 600;
+`;
+
+const RadioGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
+const RadioLabel = styled.label`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #1a1a1a;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #fc6544;
+  }
+
+  input {
+    margin-right: 0.5rem;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #fc6544;
+  }
+`;
+
+const RetriggerButton = styled(SmallButton)`
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+`;
+
+type FormatType =
+  | "none"
+  | "numerical"
+  | "numerical-decimals"
+  | "percentage"
+  | "percentage-decimals"
+  | "currency";
+
 export const App = () => {
-  const [inputValue, setInputValue] = useState("");
-  const [targetNumber, setTargetNumber] = useState(0);
-  const [animationKeys, setAnimationKeys] = useState({
-    revenue: 0,
-    users: 0,
-    growth: 0,
-    transactions: 0,
-    small: 0,
-    large: 0,
-    fast: 0,
-    medium: 0,
-    slow: 0,
-    all: 0,
-    formattedCurrencyLarge: 0,
-    formattedCurrencySmall: 0,
-    formattedPercentage: 0,
-  });
+  const [inputValue, setInputValue] = useState("8675309");
+  const [targetNumber, setTargetNumber] = useState(8675309);
+  const [duration, setDuration] = useState(400);
+  const [format, setFormat] = useState<FormatType>("none");
+  const [animationKey, setAnimationKey] = useState(0);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
-    const num = parseInt(value) || 0;
+    const num = parseFloat(value) || 0;
     setTargetNumber(num);
   };
 
-  const retriggerAnimation = (key: keyof typeof animationKeys) => {
-    setAnimationKeys((prev) => ({ ...prev, [key]: prev[key] + 1 }));
+  const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDuration(parseInt(e.target.value));
+  };
+
+  const handleFormatChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormat(e.target.value as FormatType);
+  };
+
+  const retriggerAnimation = () => {
+    setAnimationKey((prev) => prev + 1);
+  };
+
+  // Calculate decimal places from the input number
+  const getDecimalPlaces = (num: number): number => {
+    const numStr = num.toString();
+    if (numStr.includes(".")) {
+      return numStr.split(".")[1].length;
+    }
+    return 0;
+  };
+
+  const renderNumber = () => {
+    const displayNum = targetNumber || 0;
+    const decimalPlaces = getDecimalPlaces(displayNum);
+
+    switch (format) {
+      case "none":
+        return (
+          <RollingNumber
+            key={`none-${animationKey}`}
+            from={0}
+            to={Math.round(displayNum)}
+            duration={duration}
+          />
+        );
+
+      case "numerical":
+        return (
+          <FormattedRollingNumber
+            key={`numerical-${animationKey}`}
+            from={0}
+            to={Math.round(displayNum)}
+            duration={duration}
+            format="numerical"
+            decimalPlaces={0}
+          />
+        );
+
+      case "numerical-decimals":
+        return (
+          <FormattedRollingNumber
+            key={`numerical-decimals-${animationKey}`}
+            from={0}
+            to={displayNum}
+            duration={duration}
+            format="numerical"
+            decimalPlaces={decimalPlaces}
+          />
+        );
+
+      case "percentage":
+        return (
+          <FormattedRollingNumber
+            key={`percentage-${animationKey}`}
+            from={0}
+            to={Math.round(displayNum)}
+            duration={duration}
+            format="percentage"
+            decimalPlaces={0}
+          />
+        );
+
+      case "percentage-decimals":
+        return (
+          <FormattedRollingNumber
+            key={`percentage-decimals-${animationKey}`}
+            from={0}
+            to={displayNum}
+            duration={duration}
+            format="percentage"
+            decimalPlaces={decimalPlaces}
+          />
+        );
+
+      case "currency":
+        return (
+          <FormattedRollingNumber
+            key={`currency-${animationKey}`}
+            from={0}
+            to={displayNum}
+            duration={duration}
+            format="currency"
+            decimalPlaces={Math.max(2, decimalPlaces)}
+          />
+        );
+
+      default:
+        return null;
+    }
   };
 
   return (
@@ -267,296 +465,100 @@ export const App = () => {
               type="number"
               value={inputValue}
               onChange={handleInputChange}
-              placeholder="Try 123456"
+              placeholder="Try 1234567.89"
             />
           </InputSection>
 
-          <RollingNumberDisplay>
-            <RollingNumber from={0} to={targetNumber} duration={1000} />
-          </RollingNumberDisplay>
+          <ControlsSection>
+            <ControlGroup>
+              <ControlLabel htmlFor="duration-slider">
+                Animation Speed: {duration}ms
+              </ControlLabel>
+              <Slider
+                id="duration-slider"
+                type="range"
+                min="200"
+                max="2000"
+                step="50"
+                value={duration}
+                onChange={handleDurationChange}
+              />
+              <SliderValue>{duration}ms</SliderValue>
+            </ControlGroup>
+
+            <ControlGroup>
+              <ControlLabel>Format Type</ControlLabel>
+              <RadioGroup>
+                <RadioLabel>
+                  <input
+                    type="radio"
+                    name="format"
+                    value="none"
+                    checked={format === "none"}
+                    onChange={handleFormatChange}
+                  />
+                  None (Plain Number)
+                </RadioLabel>
+                <RadioLabel>
+                  <input
+                    type="radio"
+                    name="format"
+                    value="numerical"
+                    checked={format === "numerical"}
+                    onChange={handleFormatChange}
+                  />
+                  Numerical (Commas)
+                </RadioLabel>
+                <RadioLabel>
+                  <input
+                    type="radio"
+                    name="format"
+                    value="numerical-decimals"
+                    checked={format === "numerical-decimals"}
+                    onChange={handleFormatChange}
+                  />
+                  Numerical with Decimals
+                </RadioLabel>
+                <RadioLabel>
+                  <input
+                    type="radio"
+                    name="format"
+                    value="percentage"
+                    checked={format === "percentage"}
+                    onChange={handleFormatChange}
+                  />
+                  Percentage
+                </RadioLabel>
+                <RadioLabel>
+                  <input
+                    type="radio"
+                    name="format"
+                    value="percentage-decimals"
+                    checked={format === "percentage-decimals"}
+                    onChange={handleFormatChange}
+                  />
+                  Percentage with Decimals
+                </RadioLabel>
+                <RadioLabel>
+                  <input
+                    type="radio"
+                    name="format"
+                    value="currency"
+                    checked={format === "currency"}
+                    onChange={handleFormatChange}
+                  />
+                  Currency
+                </RadioLabel>
+              </RadioGroup>
+            </ControlGroup>
+          </ControlsSection>
+
+          <RollingNumberDisplay>{renderNumber()}</RollingNumberDisplay>
+
+          <RetriggerButton onClick={retriggerAnimation}>
+            ↻ Retrigger Animation
+          </RetriggerButton>
         </HeroSection>
-
-        <SampleSection>
-          <SectionTitle>Sample Use Cases</SectionTitle>
-
-          <SampleRow>
-            <SampleLabel>
-              <SampleTitle>
-                Revenue Counter
-                <SmallButton onClick={() => retriggerAnimation("revenue")}>
-                  ↻
-                </SmallButton>
-              </SampleTitle>
-              <SampleDescription>Annual recurring revenue</SampleDescription>
-            </SampleLabel>
-            <SampleValue>
-              $
-              <RollingNumber
-                key={`revenue-${animationKeys.revenue}`}
-                from={0}
-                to={2847392}
-                duration={2000}
-              />
-            </SampleValue>
-          </SampleRow>
-
-          <SampleRow>
-            <SampleLabel>
-              <SampleTitle>
-                User Count
-                <SmallButton onClick={() => retriggerAnimation("users")}>
-                  ↻
-                </SmallButton>
-              </SampleTitle>
-              <SampleDescription>Active users this month</SampleDescription>
-            </SampleLabel>
-            <SampleValue>
-              <RollingNumber
-                key={`users-${animationKeys.users}`}
-                from={0}
-                to={15847}
-                duration={1500}
-              />
-            </SampleValue>
-          </SampleRow>
-
-          <SampleRow>
-            <SampleLabel>
-              <SampleTitle>
-                Growth Rate
-                <SmallButton onClick={() => retriggerAnimation("growth")}>
-                  ↻
-                </SmallButton>
-              </SampleTitle>
-              <SampleDescription>Year over year percentage</SampleDescription>
-            </SampleLabel>
-            <SampleValue>
-              <RollingNumber
-                key={`growth-${animationKeys.growth}`}
-                from={0}
-                to={247}
-                duration={1200}
-              />
-              %
-            </SampleValue>
-          </SampleRow>
-
-          <SampleRow>
-            <SampleLabel>
-              <SampleTitle>
-                Transactions
-                <SmallButton onClick={() => retriggerAnimation("transactions")}>
-                  ↻
-                </SmallButton>
-              </SampleTitle>
-              <SampleDescription>Processed today</SampleDescription>
-            </SampleLabel>
-            <SampleValue>
-              <RollingNumber
-                key={`transactions-${animationKeys.transactions}`}
-                from={0}
-                to={8932}
-                duration={1800}
-              />
-            </SampleValue>
-          </SampleRow>
-        </SampleSection>
-
-        <Grid>
-          <GridItem>
-            <SampleSection style={{ textAlign: "center" }}>
-              <SectionTitle
-                style={{ textAlign: "center", marginBottom: "0.5rem" }}
-              >
-                Small Numbers
-              </SectionTitle>
-              <SectionText style={{ marginBottom: "1rem" }}>
-                Perfect for counters and metrics
-              </SectionText>
-              <div style={{ marginBottom: "1.5rem" }}>
-                <SmallButton onClick={() => retriggerAnimation("small")}>
-                  ↻ Retrigger
-                </SmallButton>
-              </div>
-              <LargeMetricValue style={{ color: "#1a1a1a" }}>
-                <RollingNumber
-                  key={`small-${animationKeys.small}`}
-                  from={0}
-                  to={42}
-                  duration={1000}
-                />
-              </LargeMetricValue>
-            </SampleSection>
-          </GridItem>
-
-          <GridItem>
-            <SampleSection style={{ textAlign: "center" }}>
-              <SectionTitle
-                style={{ textAlign: "center", marginBottom: "0.5rem" }}
-              >
-                Large Numbers
-              </SectionTitle>
-              <SectionText style={{ marginBottom: "1rem" }}>
-                Great for financial dashboards
-              </SectionText>
-              <div style={{ marginBottom: "1.5rem" }}>
-                <SmallButton onClick={() => retriggerAnimation("large")}>
-                  ↻ Retrigger
-                </SmallButton>
-              </div>
-              <LargeMetricValue style={{ color: "#1a1a1a" }}>
-                <RollingNumber
-                  key={`large-${animationKeys.large}`}
-                  from={0}
-                  to={9876543}
-                  duration={2500}
-                />
-              </LargeMetricValue>
-            </SampleSection>
-          </GridItem>
-        </Grid>
-
-        <CenteredSection>
-          <SectionTitle style={{ marginBottom: "0.5rem" }}>
-            Different Durations
-          </SectionTitle>
-          <SectionText>
-            Customize animation speed for different use cases
-          </SectionText>
-
-          <SmallGrid>
-            <MetricBox>
-              <MetricLabel>Fast (500ms)</MetricLabel>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <SmallButton onClick={() => retriggerAnimation("fast")}>
-                  ↻ Retrigger
-                </SmallButton>
-              </div>
-              <MetricValue>
-                <RollingNumber
-                  key={`fast-${animationKeys.fast}`}
-                  from={0}
-                  to={targetNumber || 1234}
-                  duration={500}
-                />
-              </MetricValue>
-            </MetricBox>
-
-            <MetricBox>
-              <MetricLabel>Medium (1500ms)</MetricLabel>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <SmallButton onClick={() => retriggerAnimation("medium")}>
-                  ↻ Retrigger
-                </SmallButton>
-              </div>
-              <MetricValue>
-                <RollingNumber
-                  key={`medium-${animationKeys.medium}`}
-                  from={0}
-                  to={targetNumber || 1234}
-                  duration={1500}
-                />
-              </MetricValue>
-            </MetricBox>
-
-            <MetricBox>
-              <MetricLabel>Slow (3000ms)</MetricLabel>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <SmallButton onClick={() => retriggerAnimation("slow")}>
-                  ↻ Retrigger
-                </SmallButton>
-              </div>
-              <MetricValue>
-                <RollingNumber
-                  key={`slow-${animationKeys.slow}`}
-                  from={0}
-                  to={targetNumber || 1234}
-                  duration={3000}
-                />
-              </MetricValue>
-            </MetricBox>
-          </SmallGrid>
-        </CenteredSection>
-
-        <CenteredSection
-          style={{
-            marginTop: "3rem",
-            border: "2px dashed #e0e0e0",
-            paddingTop: "3rem",
-          }}
-        >
-          <SectionTitle style={{ marginBottom: "0.5rem" }}>
-            Experimental: Formatted Numbers
-          </SectionTitle>
-          <SectionText>
-            Testing formatted rolling numbers with commas, decimals, and symbols
-          </SectionText>
-
-          <SmallGrid>
-            <MetricBox>
-              <MetricLabel>Large Currency</MetricLabel>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <SmallButton
-                  onClick={() => retriggerAnimation("formattedCurrencyLarge")}
-                >
-                  ↻ Retrigger
-                </SmallButton>
-              </div>
-              <MetricValue style={{ fontSize: "1.25rem" }}>
-                <FormattedRollingNumber
-                  key={`currency-large-${animationKeys.formattedCurrencyLarge}`}
-                  from={992624.31}
-                  to={107262123.98}
-                  duration={2000}
-                  format="currency"
-                  decimalPlaces={2}
-                />
-              </MetricValue>
-            </MetricBox>
-
-            <MetricBox>
-              <MetricLabel>Precision Percentage</MetricLabel>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <SmallButton
-                  onClick={() => retriggerAnimation("formattedPercentage")}
-                >
-                  ↻ Retrigger
-                </SmallButton>
-              </div>
-              <MetricValue style={{ fontSize: "1.25rem" }}>
-                <FormattedRollingNumber
-                  key={`percentage-${animationKeys.formattedPercentage}`}
-                  from={17.093827}
-                  to={98.765432}
-                  duration={2500}
-                  format="percentage"
-                  decimalPlaces={6}
-                />
-              </MetricValue>
-            </MetricBox>
-
-            <MetricBox>
-              <MetricLabel>Small Currency</MetricLabel>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <SmallButton
-                  onClick={() => retriggerAnimation("formattedCurrencySmall")}
-                >
-                  ↻ Retrigger
-                </SmallButton>
-              </div>
-              <MetricValue style={{ fontSize: "1.25rem" }}>
-                <FormattedRollingNumber
-                  key={`currency-small-${animationKeys.formattedCurrencySmall}`}
-                  from={21.25}
-                  to={42.5}
-                  duration={1500}
-                  format="currency"
-                  decimalPlaces={2}
-                />
-              </MetricValue>
-            </MetricBox>
-          </SmallGrid>
-        </CenteredSection>
       </Container>
     </AppContainer>
   );
