@@ -17,6 +17,7 @@ Designed for the GP Member Experience, where carried interest numbers update at 
 ## Features
 
 - Smooth rolling number animations with customizable durations (200-2000ms)
+- Adjustable line height control (1.0-2.0) for compact or spacious number displays
 - Interactive controls to experiment with different formats and speeds
 - Multiple format options: plain numbers, numerical with commas, percentages, and currency
 - Automatic decimal place detection for precise formatting
