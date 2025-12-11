@@ -16,9 +16,11 @@ Designed for the GP Member Experience, where carried interest numbers update at 
 
 ## Features
 
-- Smooth rolling number animations with customizable durations
+- Smooth rolling number animations with customizable durations (200-2000ms)
+- Interactive controls to experiment with different formats and speeds
+- Multiple format options: plain numbers, numerical with commas, percentages, and currency
+- Automatic decimal place detection for precise formatting
 - Professional black/white design with subtle brand orange accents
-- Individual animation controls for testing and observation
 - Built with React 17 and styled-components
 
 ---
