@@ -338,6 +338,7 @@ export const App = () => {
   const [inputValue, setInputValue] = useState("8675309");
   const [targetNumber, setTargetNumber] = useState(8675309);
   const [duration, setDuration] = useState(400);
+  const [lineHeight, setLineHeight] = useState(1.4);
   const [format, setFormat] = useState<FormatType>("none");
   const [animationKey, setAnimationKey] = useState(0);
 
@@ -350,6 +351,10 @@ export const App = () => {
 
   const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDuration(parseInt(e.target.value));
+  };
+
+  const handleLineHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLineHeight(parseFloat(e.target.value));
   };
 
   const handleFormatChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -381,6 +386,7 @@ export const App = () => {
             from={0}
             to={Math.round(displayNum)}
             duration={duration}
+            lineHeight={lineHeight}
           />
         );
 
@@ -391,6 +397,7 @@ export const App = () => {
             from={0}
             to={Math.round(displayNum)}
             duration={duration}
+            lineHeight={lineHeight}
             format="numerical"
             decimalPlaces={0}
           />
@@ -403,6 +410,7 @@ export const App = () => {
             from={0}
             to={displayNum}
             duration={duration}
+            lineHeight={lineHeight}
             format="numerical"
             decimalPlaces={decimalPlaces}
           />
@@ -415,6 +423,7 @@ export const App = () => {
             from={0}
             to={Math.round(displayNum)}
             duration={duration}
+            lineHeight={lineHeight}
             format="percentage"
             decimalPlaces={0}
           />
@@ -427,6 +436,7 @@ export const App = () => {
             from={0}
             to={displayNum}
             duration={duration}
+            lineHeight={lineHeight}
             format="percentage"
             decimalPlaces={decimalPlaces}
           />
@@ -439,6 +449,7 @@ export const App = () => {
             from={0}
             to={displayNum}
             duration={duration}
+            lineHeight={lineHeight}
             format="currency"
             decimalPlaces={Math.max(2, decimalPlaces)}
           />
@@ -484,6 +495,22 @@ export const App = () => {
                 onChange={handleDurationChange}
               />
               <SliderValue>{duration}ms</SliderValue>
+            </ControlGroup>
+
+            <ControlGroup>
+              <ControlLabel htmlFor="lineheight-slider">
+                Line Height: {lineHeight.toFixed(2)}
+              </ControlLabel>
+              <Slider
+                id="lineheight-slider"
+                type="range"
+                min="1.0"
+                max="2.0"
+                step="0.05"
+                value={lineHeight}
+                onChange={handleLineHeightChange}
+              />
+              <SliderValue>{lineHeight.toFixed(2)}</SliderValue>
             </ControlGroup>
 
             <ControlGroup>

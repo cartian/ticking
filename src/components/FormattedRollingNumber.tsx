@@ -43,6 +43,7 @@ const StaticChar = styled.span<{ char: string }>`
 
 const Digit = styled.span<{ value: string }>`
   width: 1ch;
+  height: 1em;
   overflow: hidden;
   display: inline-flex;
   position: relative;
@@ -64,34 +65,37 @@ const Digit = styled.span<{ value: string }>`
   }
 
   .scale span {
-    line-height: 1.4;
+    line-height: var(--line-height, 1.4);
+    display: block;
+    flex-shrink: 0;
   }
 
   .scale span:last-child {
     /* the minus (-) */
     position: absolute;
-    bottom: -10%;
+    bottom: calc(-0.5 * var(--line-height, 1.4) * 1em);
     left: 0;
   }
 
   ${props => {
-    const valueMap: { [key: string]: string } = {
-      '\u200B': 'translateY(10%)',
-      '0': 'translateY(0)',
-      '1': 'translateY(-10%)',
-      '2': 'translateY(-20%)',
-      '3': 'translateY(-30%)',
-      '4': 'translateY(-40%)',
-      '5': 'translateY(-50%)',
-      '6': 'translateY(-60%)',
-      '7': 'translateY(-70%)',
-      '8': 'translateY(-80%)',
-      '9': 'translateY(-90%)',
-      '-': 'translateY(-100%)',
+    const valueMap: { [key: string]: number } = {
+      '\u200B': 0.5,
+      '0': 0,
+      '1': -1,
+      '2': -2,
+      '3': -3,
+      '4': -4,
+      '5': -5,
+      '6': -6,
+      '7': -7,
+      '8': -8,
+      '9': -9,
+      '-': -10,
     };
+    const offset = valueMap[props.value] ?? 0;
     return `
       .scale {
-        transform: ${valueMap[props.value] || 'translateY(0)'};
+        transform: translateY(calc((${offset} * var(--line-height, 1.4) - 0.5 * (var(--line-height, 1.4) - 1)) * 1em));
       }
     `;
   }}
@@ -101,6 +105,7 @@ interface FormattedRollingNumberProps {
   from?: number;
   to: number;
   duration?: number;
+  lineHeight?: number;
   format: 'currency' | 'percentage' | 'numerical';
   decimalPlaces?: number;
   className?: string;
@@ -176,6 +181,7 @@ export const FormattedRollingNumber: React.FC<FormattedRollingNumberProps> = ({
   from = 0,
   to,
   duration = 1000,
+  lineHeight = 1.4,
   format,
   decimalPlaces = 2,
   className,
@@ -206,6 +212,7 @@ export const FormattedRollingNumber: React.FC<FormattedRollingNumberProps> = ({
       style={{
         ...style,
         '--roll-duration': `${duration}ms`,
+        '--line-height': lineHeight,
       } as React.CSSProperties}
     >
       {structure.map((part, index) => {
